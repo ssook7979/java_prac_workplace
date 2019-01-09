@@ -3,6 +3,8 @@ package com.customer;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.impl.Discountable;
+import com.product.Deliverable;
 import com.product.Product;
 
 public class Customer {
@@ -28,7 +30,7 @@ public class Customer {
 	    customerNumber = result;
 	}
 	
-	Customer (int money) {
+	public Customer (int money) {
 		this(money, 0);
 	}
 	
@@ -38,17 +40,17 @@ public class Customer {
 	}
 	
 	public void purchase(Product p) {
-		if (p.getPrice() > this.money) {
+		if (p instanceof Discountable ) {
+			this.money -= ((Discountable) p).getDiscountPrice(p.getPrice());
+			System.out.println(p.toString());			
+		}
+		else if ( ( p.getPrice() > this.money ) && p.isPurchasable() ) {
 			this.money -= p.getPrice(); 
-			System.out.println(p.getName() + "을(를) 구입하였습니다.");
+			System.out.println(p.toString());
 		}
 		else {
 			System.out.println("잔액이 부족합니다.");
 		}
-	}
-	
-	public void delivery(Product p) {
-		
 	}
 
 	public int getMoney() {
